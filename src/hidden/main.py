@@ -5,7 +5,11 @@ root: tk.Tk = tk.Tk()
 root.title("Nigga helper")
 root.geometry("300x150")
 
-btn1: ttk.Button = ttk.Button(text="Nigger")
+btn1: ttk.Button = ttk.Button(
+    root,
+    text="Nigga run!",
+    command=lambda: messagebox.showinfo("Hey nigga", "Run becuase white are cooming!"),
+)
 btn1.pack()
 
 root.mainloop()
