@@ -1,4 +1,5 @@
 # Python-generated files
+# cSpell: disable-next-line
 __pycache__/
 *.py[oc]
 build/
@@ -7,4 +8,8 @@ wheels/
 *.egg-info
 
 # Virtual environments
+# cSpell: disable-next-line
 .venv
+
+# User generated files
+prog.txt
