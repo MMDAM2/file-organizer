@@ -1,4 +1,8 @@
 #:schema https://json.schemastore.org/pyproject.json
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "hidden"
 version = "0.1.0"
@@ -6,3 +10,6 @@ description = "idk"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hidden"]
