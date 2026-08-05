@@ -1,14 +1,12 @@
-from ast import main
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
 root: tk.Tk = tk.Tk()
+root.title("Nigga helper")
+root.geometry("300x150")
 
-btn1: ttk.Button(root, text = "Nigga run!", command = lambda: messagebox.showinfo("Hey nigga", "Run becuase white are cooming!")) # type: ignore
+btn1 = ttk.Button(root, text = "Nigga run!", command = lambda: messagebox.showinfo("Hey nigga", "Run becuase white are cooming!")) # type: ignore
 btn1.pack()
 
 root.mainloop()
-
-if __name__ == "__main__":
-    main()
+print("closed by : useer")
