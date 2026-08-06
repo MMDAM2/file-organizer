@@ -18,4 +18,4 @@ This calculator (which still not complete) has a path to grow
 -> README.md
 -> pyproject.toml
 ```
-<!-- hey az in be bad ti temp benevis chikar konam>
+<!-- hey az in be bad to temp benevis chikar konam>
