@@ -6,9 +6,6 @@
 
 - Organizes files based on their extensions
 - Automatically handles duplicate filenames
-- Recursively scans directories
-- Displays progress during file processing
-- Supports custom organization rules through configuration files
 
 
 ## Installation
