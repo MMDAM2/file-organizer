@@ -1,7 +1,13 @@
+# organizer.py
+
+"""Used by `main.py`"""
+
 import shutil
 from pathlib import Path
 from typing import Final
 
+# Can be edited to support more files
+# TODO: Add more file extensions
 EXTENSIONS: Final[dict[str, str]] = {
     ".jpg": "Images",
     ".jpeg": "Images",
@@ -28,7 +34,18 @@ EXTENSIONS: Final[dict[str, str]] = {
 }
 
 
-def organizer(dir: str, event: object = None) -> bool:
+def organizer(
+    dir: str, event: object = None
+) -> bool:  # FIXME: fix the connection between main and organizer
+    """Organizes the given folder based on the filename's suffix (extension)
+
+    Args:
+        dir (str): The given directory.
+        event (object, optional): Needed for tkinter. Defaults to None.
+
+    Returns:
+        bool: Returns if the operation was successful.
+    """
     # __file__ is the script's directory
     folder: Path = Path(dir).expanduser().resolve()
 
@@ -38,7 +55,7 @@ def organizer(dir: str, event: object = None) -> bool:
     files: list[Path] = []
 
     for item in folder.iterdir():
-        if item.is_file:
+        if item.is_file():
             files.append(item)
 
     for item in files:
@@ -47,28 +64,21 @@ def organizer(dir: str, event: object = None) -> bool:
 
         total += 1
 
-        category = EXTENSIONS.get(item.suffix.lower(), "Other")
+        category: str = EXTENSIONS.get(item.suffix.lower(), "Other")
 
-        destination = folder / category
+        destination: Path = folder / category
         destination.mkdir(exist_ok=True)
 
-        new_location = destination / item.name
+        new_location: Path = destination / item.name
 
         counter: int = 1
 
         while new_location.exists():
-            new_name = f"{item.stem} ({counter}){item.suffix}"
-            new_location = folder / new_name
-            print(f"Renamed {item.name} to {new_name}")
+            new_name: str = f"{item.stem} ({counter}){item.suffix}"
+            new_location: Path = folder / new_name
             counter += 1
 
         _ = shutil.move(item, new_location)
-        print(f"Moved {item.name} to {new_location}")
         moved += 1
 
     return True
-
-
-folder = Path(__file__).expanduser().parent
-
-organizer(str(folder))

@@ -1,3 +1,5 @@
+"""Temporary file for planning"""
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -20,7 +22,9 @@ def mmd():
 
     kar_ha = tk.Label(
         windowmd,
-        text= "Nothing..."
+        text= """Tkinteret ro yek zare dorost kon bad shekl shode, 
+        az ttk.Tk ham estefade nakon vojood nadare, 
+        va boro filedialog tkinter ro yad begir az tarigh oon az user file bekhah"""
     )
     kar_ha.pack_configure(pady= 5)
 

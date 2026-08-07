@@ -18,4 +18,7 @@ This calculator (which still not complete) has a path to grow
 -> README.md
 -> pyproject.toml
 ```
-<!-- hey az in be bad to temp benevis chikar konam>
+
+<!-- link markdown: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax  -->
+<!-- cSpell: disable-next-line  -->
+<!-- mikhay in zaban ro yad begiri az link bala estefade kon -->
