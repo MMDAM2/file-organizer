@@ -9,10 +9,14 @@ This calculator (which still not complete) has a path to grow
 <!-- cSpell: words pyproject -->
 
 ```none
+-> .github
+  -> workflows
+    -> github-yml.yml
 -> src
   -> hidden
     -> main.py
 -> .gitignore
+-> .python-version
 -> .python-version
 -> uv.lock
 -> README.md
