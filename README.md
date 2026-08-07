@@ -1,8 +1,15 @@
-# Calculator
+# File Organizer
 
-## With advanced (well not advanced) features
+> A Python script that automatically organizes files based on their file extensions.
 
-This calculator (which still not complete) has a path to grow
+## Features
+
+- Organizes files based on their extensions
+- Automatically handles duplicate filenames
+- Recursively scans directories
+- Displays progress during file processing
+- Supports custom organization rules through configuration files
+
 
 ## Installation
 
