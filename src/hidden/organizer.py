@@ -35,19 +35,18 @@ EXTENSIONS: Final[dict[str, str]] = {
 
 
 def organizer(
-    dir: str, event: object = None
-) -> bool:  # FIXME: fix the connection between main and organizer
+    path: str,
+) -> tuple[int, int, bool]:
     """Organizes the given folder based on the filename's suffix (extension)
 
     Args:
-        dir (str): The given directory.
-        event (object, optional): Needed for tkinter. Defaults to None.
+        path (str): _description_
 
     Returns:
-        bool: Returns if the operation was successful.
+        tuple[int, int, bool]: Returns the total amount processing, moved files, and the success
     """
     # __file__ is the script's directory
-    folder: Path = Path(dir).expanduser().resolve()
+    folder: Path = Path(path).expanduser().resolve()
 
     total: int = 0
     moved: int = 0
@@ -59,7 +58,7 @@ def organizer(
             files.append(item)
 
     for item in files:
-        if any(parent.name in EXTENSIONS for parent in item.parents):
+        if item.parent.name in EXTENSIONS.values():
             continue
 
         total += 1
@@ -75,10 +74,10 @@ def organizer(
 
         while new_location.exists():
             new_name: str = f"{item.stem} ({counter}){item.suffix}"
-            new_location: Path = folder / new_name
+            new_location: Path = destination / new_name
             counter += 1
 
         _ = shutil.move(item, new_location)
         moved += 1
 
-    return True
+    return total, moved, True

@@ -4,6 +4,33 @@
 
 This calculator (which still not complete) has a path to grow
 
+## Installation
+
+- Clone the repository:
+
+```bash
+git clone https://github.com/MMDAM2/hidden.git
+cd hidden
+```
+
+- Make the file executable:
+
+```bash
+chmod +x src/hidden/main.py
+```
+
+- Run the file using:
+
+```bash
+src/hidden/main.py
+```
+
+or
+
+```bash
+python3 src/hidden/main.py
+```
+
 ## File Structure
 
 <!-- cSpell: words pyproject -->
