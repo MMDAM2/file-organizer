@@ -35,4 +35,4 @@ jobs:
           pip install pylint
 
       - name: Run Pylint
-        run: pylint src/hidden
+        run: pylint src/hidden --fail-under=8.0
