@@ -4,11 +4,14 @@
 
 import tkinter as tk
 from tkinter import (  # TODO: Use `filedialog` for target directory
+    filedialog,
     messagebox,
     ttk,
 )
 
 from hidden.organizer import organizer
+
+# filedialog.askdirectory()
 
 
 def organize_folder() -> None:
