@@ -6,58 +6,58 @@ from tkinter import ttk
 
 def mmd():
     root.withdraw()
-    windowmd.deiconify()
 
     def back():
-        windowmd.withdraw()
+        window.destroy()
         root.deiconify()
 
-    bb = tk.Button(windowmd, text="Return to menu", bg="red", command=back)
+    window = tk.Tk()
+    window.title("MMD")
+    window.geometry("500x500")
+
+    window.protocol("WM_DELETE_WINDOW", window.quit)
+
+    bb = tk.Button(window, text="Return to menu", bg="red", command=back)
     bb.pack_configure()
 
     kar_ha = tk.Label(
-        windowmd,
+        window,
         text="""Tkinteret ro yek zare dorost kon bad shekl shode, 
         az ttk.Tk ham estefade nakon vojood nadare, 
-        va boro filedialog tkinter ro yad begir az tarigh oon az user file bekhah""",
+        va boro filedialog tkinter ro yad begir az tarigh oon az user file bekhah\n انجام شد✅""",
     )
     kar_ha.pack_configure(pady=5)
 
+    window.mainloop()
 
 def mobin():
     root.withdraw()
-    windowm.deiconify()
 
     def back():
-        windowm.withdraw()
+        window.destroy()
         root.deiconify()
 
-    bb = tk.Button(windowm, text="Return to menu", bg="red", command=back)
+    window = tk.Tk()
+    window.title("Mobin")
+    window.geometry("500x500")
+    window.protocol("WM_DELETE_WINDOW", window.quit)
+
+    bb = tk.Button(window, text="Return to menu", bg="red", command=back)
     bb.pack_configure()
 
     kar_ha = tk.Label(
-        windowm,
-        text=" برو و اون کامند های دف فایل و فولدر رو انجام بده\nچون من نمیدونم چه دفی میخوای بزاری و همینطور \nتوهم برو برام بنویس چیکار کنم",
+        window,
+        text= "انجام دادم حالا بگو چیکار کنم"
     )
     kar_ha.pack_configure(pady=5)
+
+    window.mainloop()
 
 
 root = tk.Tk()
 root.title("کار هایی که باید انجام بدی")
 root.geometry("500x150")
 root.protocol("WM_DELETE_WINDOW", root.quit)
-
-windowmd = tk.Tk()
-windowmd.title("MMD")
-windowmd.geometry("500x500")
-windowmd.withdraw()
-windowmd.protocol("WM_DELETE_WINDOW", windowmd.quit)
-
-windowm = tk.Tk()
-windowm.title("Mobin")
-windowm.geometry("500x500")
-windowm.withdraw()
-windowm.protocol("WM_DELETE_WINDOW", windowm.quit)
 
 b1 = ttk.Button(root, text="کار های MMD", command=mmd)
 b1.pack_configure(pady=10)
@@ -66,5 +66,3 @@ b2 = ttk.Button(root, text="کار های mobin", command=mobin)
 b2.pack_configure(pady=10)
 
 root.mainloop()
-windowmd.mainloop()
-windowm.mainloop()

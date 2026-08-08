@@ -1,15 +1,15 @@
-#!/usr/bin/env python3
+##!/usr/bin/env python3
 
 """Main app"""
 
 import tkinter as tk
 from tkinter import (  # TODO: Use `filedialog` for target directory
-    filedialog,  # noqa: F401
+    filedialog,
     messagebox,
     ttk,
 )
 
-from hidden.organizer import organizer
+from organizer import organizer
 
 # filedialog.askdirectory()
 
@@ -18,6 +18,18 @@ def organize_folder() -> None:
     """Folder window"""
     root.withdraw()
 
+    def select_folder():
+        path = filedialog.askdirectory(
+            title="open folder for organizer"
+        )
+        show_get.config(text= path, fg= "white", bg= "gray")
+        if path == "":
+            messagebox.showwarning(
+                "Warning",
+                "you have not entered folder"
+            )
+            show_get.config(text= "Empty", fg= "white", bg= "gray")
+
     def back() -> None:
         """Destroys the new initialized window and brings `root` window to focus"""
         window.destroy()
@@ -25,26 +37,28 @@ def organize_folder() -> None:
 
     window = tk.Tk()
     window.title()
-    window.geometry("400x200")
+    window.geometry("400x150")
     window.resizable(width=False, height=False)
     window.protocol("WM_DELETE_WINDOW", window.quit)
 
-    helper = tk.Label(
+    getb = tk.Button(
         window,
-        text="Enter your folder (path), \nalso you can with \n',' enter multiple folder",
-        fg="gray",
-    )
-    helper.pack_configure(pady=1)
+        text= "select folder",
+        bg= "yellow",
+        command= select_folder)
+    getb.pack_configure()
 
-    get = ttk.Entry(window, width=25)
-    get.pack_configure(pady=5)
+    show_get = tk.Label(
+        window
+    )
+    show_get.pack_configure(pady= 5)
 
     def on_click_button(path: str) -> None:
         (
             total,
             moved,
             success,
-        ) = organizer(path)
+        ) = organizer.organizer(path)
 
         if success:
             messagebox.showinfo(
@@ -54,9 +68,9 @@ def organize_folder() -> None:
 
     org_button = tk.Button(
         window,
-        text="Organize folder / folders",
+        text="Organize folder",
         bg="green",
-        command=lambda: on_click_button(get.get()),
+        command=lambda: on_click_button(getb.get()),
     )
     org_button.pack_configure(pady=5)
 
@@ -68,7 +82,7 @@ def organize_folder() -> None:
 
 root: tk.Tk = tk.Tk()  # Amir nabayad az 'ttk.Tk' estefade koni kar nemikone
 root.title("File Organizer")
-root.geometry("400x250")
+root.geometry("400x150")
 root.resizable(width=False, height=False)
 
 # cSpell: words padx pady
