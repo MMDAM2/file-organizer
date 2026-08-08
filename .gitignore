@@ -16,5 +16,6 @@ wheels/
 # User generated files
 prog.txt
 
-# VSCode environment files
+# VSCode files
 *.code-workspace
+.vscode

@@ -1,4 +1,4 @@
-##!/usr/bin/env python3
+#!/usr/bin/env python3
 
 """Main app"""
 
@@ -9,7 +9,7 @@ from tkinter import (  # TODO: Use `filedialog` for target directory
     ttk,
 )
 
-from organizer import organizer
+from hidden.organizer import organizer
 
 # filedialog.askdirectory()
 
@@ -18,17 +18,12 @@ def organize_folder() -> None:
     """Folder window"""
     root.withdraw()
 
-    def select_folder():
-        path = filedialog.askdirectory(
-            title="open folder for organizer"
-        )
-        show_get.config(text= path, fg= "white", bg= "gray")
+    def browse():
+        path = filedialog.askdirectory(title="Select a folder")
         if path == "":
-            messagebox.showwarning(
-                "Warning",
-                "you have not entered folder"
-            )
-            show_get.config(text= "Empty", fg= "white", bg= "gray")
+            messagebox.showwarning("Warning", "The given directory does not exist")
+            show_get.config(text="Empty", fg="white", bg="gray")
+        txt1.insert(0, path)
 
     def back() -> None:
         """Destroys the new initialized window and brings `root` window to focus"""
@@ -36,43 +31,51 @@ def organize_folder() -> None:
         root.deiconify()
 
     window = tk.Tk()
-    window.title()
+    window.title("Folder")
     window.geometry("400x150")
     window.resizable(width=False, height=False)
     window.protocol("WM_DELETE_WINDOW", window.quit)
 
-    getb = tk.Button(
-        window,
-        text= "select folder",
-        bg= "yellow",
-        command= select_folder)
-    getb.pack_configure()
+    txt1 = ttk.Entry(window)
+    txt1.pack()
 
-    show_get = tk.Label(
-        window
-    )
-    show_get.pack_configure(pady= 5)
+    btn2 = tk.Button(window, text="Browse", bg="yellow", command=browse)
+    btn2.pack()
 
-    def on_click_button(path: str) -> None:
-        (
-            total,
-            moved,
-            success,
-        ) = organizer.organizer(path)
+    show_get = tk.Label(window)
+    show_get.pack()
+
+    def on_click_button(path: str) -> bool | None:
+
+        try:
+            (
+                total,
+                moved,
+                success,
+            ) = organizer(path)
+        except FileNotFoundError as e:
+            messagebox.showerror("Error", f"{e}")
+            return False
 
         if success:
             messagebox.showinfo(
                 "Completed",
                 f"Operation completed successfully\n\nTotal files: {total}\nMoved files: {moved}",
             )
+        else:
+            messagebox.showerror(
+                "Failed", f"Operation failed\n\nTotal files: {total}\nMoved files: {moved}"
+            )
+
+        return None
 
     org_button = tk.Button(
         window,
         text="Organize folder",
         bg="green",
-        command=lambda: on_click_button(getb.get()),
+        command=lambda: on_click_button(txt1.get()),
     )
-    org_button.pack_configure(pady=5)
+    org_button.pack()
 
     back_button = tk.Button(window, text="Return to menu", bg="red", command=back)
     back_button.pack_configure(pady=5)

@@ -5,7 +5,7 @@
 import shutil
 from pathlib import Path
 
-from categories import EXTENSIONS
+from hidden.categories import EXTENSIONS
 
 
 def organizer(

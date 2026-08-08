@@ -45,6 +45,11 @@ python3 src/hidden/main.py
 -> src
   -> hidden
     -> main.py
+    -> __init__.py
+    -> organizer.py
+    -> categories.py
+-> tests
+  -> test_organizer.py
 -> .gitignore
 -> .python-version
 -> .python-version

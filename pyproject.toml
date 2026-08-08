@@ -10,7 +10,7 @@ description = "idk"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
-  { name = "MMDam", email = "amirmohammadghasemi89@gmail.com" },
+  { name = "MMDAM2", email = "amirmohammadghasemi89@gmail.com" },
   { name = "havinaccount", email = "203082879+havinaccount@users.noreply.github.com" },
 ]
 dependencies = []
@@ -27,8 +27,4 @@ line-length = 100
 disable = ["fixme", "unused-argument"]
 
 [dependency-groups]
-dev = [
-    "pylint>=4.0.6",
-    "pytest>=9.1.1",
-    "ruff>=0.16.2",
-]
+dev = ["pylint>=4.0.6", "pytest>=9.1.1", "ruff>=0.16.2"]

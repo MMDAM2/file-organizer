@@ -30,6 +30,7 @@ def mmd():
 
     window.mainloop()
 
+
 def mobin():
     root.withdraw()
 
@@ -46,8 +47,7 @@ def mobin():
     bb.pack_configure()
 
     kar_ha = tk.Label(
-        window,
-        text= "انجام دادم حالا بگو چیکار کنم\n در ضمن برو تست کن ببین باگی چیزی نداره"
+        window, text="انجام دادم حالا بگو چیکار کنم\n در ضمن برو تست کن ببین باگی چیزی نداره"
     )
     kar_ha.pack_configure(pady=5)
 
