@@ -1,7 +1,7 @@
 #:schema https://json.schemastore.org/pyproject.json
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.12.2,<0.13.0"]
+build-backend = "uv_build"
 
 [project]
 name = "hidden"
@@ -9,10 +9,14 @@ version = "0.4.0"
 description = "idk"
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [
+  { name = "MMDam", email = "amirmohammadghasemi89@gmail.com" },
+  { name = "havinaccount", email = "203082879+havinaccount@users.noreply.github.com" }
+]
 dependencies = []
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/"]
+[project.scripts]
+projects = "projects:main"
 
 # cSpell: words pylint
 [tool.pylint.messages_control]
