@@ -27,4 +27,8 @@ line-length = 100
 disable = ["fixme", "unused-argument"]
 
 [dependency-groups]
-dev = ["pytest>=9.1.1", "ruff>=0.16.2"]
+dev = [
+    "pylint>=4.0.6",
+    "pytest>=9.1.1",
+    "ruff>=0.16.2",
+]
