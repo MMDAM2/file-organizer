@@ -11,13 +11,20 @@ readme = "README.md"
 requires-python = ">=3.10"
 authors = [
   { name = "MMDam", email = "amirmohammadghasemi89@gmail.com" },
-  { name = "havinaccount", email = "203082879+havinaccount@users.noreply.github.com" }
+  { name = "havinaccount", email = "203082879+havinaccount@users.noreply.github.com" },
 ]
 dependencies = []
 
 [project.scripts]
-projects = "projects:main"
+projects = "projects:hidden"
+
+[tool.ruff]
+line-length = 100
+
 
 # cSpell: words pylint
 [tool.pylint.messages_control]
 disable = ["fixme", "unused-argument"]
+
+[dependency-groups]
+dev = ["pytest>=9.1.1", "ruff>=0.16.2"]

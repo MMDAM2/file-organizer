@@ -49,9 +49,7 @@ def organize_folder() -> None:
         if success:
             messagebox.showinfo(
                 "Completed",
-                "Operation completed successfully\n\n"
-                f"Total files: {total}\n"
-                f"Moved files: {moved}",
+                f"Operation completed successfully\n\nTotal files: {total}\nMoved files: {moved}",
             )
 
     org_button = tk.Button(
