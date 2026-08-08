@@ -47,7 +47,7 @@ def mobin():
 
     kar_ha = tk.Label(
         window,
-        text= "انجام دادم حالا بگو چیکار کنم"
+        text= "انجام دادم حالا بگو چیکار کنم\n در ضمن برو تست کن ببین باگی چیزی نداره"
     )
     kar_ha.pack_configure(pady=5)
 
