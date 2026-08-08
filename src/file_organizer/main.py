@@ -9,7 +9,7 @@ from tkinter import (  # TODO: Use `filedialog` for target directory
     ttk,
 )
 
-from hidden.organizer import organizer
+from file_organizer.organizer import organizer
 
 # filedialog.askdirectory()
 
