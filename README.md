@@ -7,7 +7,6 @@
 - Organizes files based on their extensions
 - Automatically handles duplicate filenames
 
-
 ## Installation
 
 - Clone the repository:

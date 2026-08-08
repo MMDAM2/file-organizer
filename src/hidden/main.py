@@ -4,7 +4,7 @@
 
 import tkinter as tk
 from tkinter import (  # TODO: Use `filedialog` for target directory
-    filedialog,
+    filedialog,  # noqa: F401
     messagebox,
     ttk,
 )
