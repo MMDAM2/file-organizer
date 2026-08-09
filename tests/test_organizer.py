@@ -1,6 +1,6 @@
 import pytest
 
-from hidden.organizer import organizer
+from file_organizer.organizer import organizer
 
 
 @pytest.mark.parametrize(

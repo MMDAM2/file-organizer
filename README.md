@@ -9,17 +9,23 @@
 
 ## Installation
 
+### Requirements
+
+- Python v3.10+
+
+### Steps
+
 - Clone the repository:
 
 ```bash
-git clone https://github.com/MMDAM2/hidden.git
-cd hidden
+git clone https://github.com/MMDAM2/file_organizer.git
+cd file_organizer
 ```
 
 - Make the file executable:
 
 ```bash
-chmod +x src/hidden/main.py
+chmod +x src/file_organizer/main.py
 ```
 
 - Run the file using:
@@ -31,7 +37,7 @@ src/hidden/main.py
 or
 
 ```bash
-python3 src/hidden/main.py
+python3 src/file_organizer/main.py
 ```
 
 ## File Structure
@@ -43,7 +49,8 @@ python3 src/hidden/main.py
   -> workflows
     -> github-yml.yml
 -> src
-  -> hidden
+  -> file_organizer
+    -> README.md
     -> main.py
     -> __init__.py
     -> organizer.py
@@ -51,7 +58,7 @@ python3 src/hidden/main.py
 -> tests
   -> test_organizer.py
 -> .gitignore
--> .python-version
+-> .prettierrc
 -> .python-version
 -> uv.lock
 -> README.md
@@ -61,3 +68,9 @@ python3 src/hidden/main.py
 <!-- link markdown: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax  -->
 <!-- cSpell: disable-next-line  -->
 <!-- mikhay in zaban ro yad begiri az link bala estefade kon -->
+
+## Notes
+
+- File are moved, not copied nor deleted
+- Do not use this as a main organizing app
+- Existing files with same names will be renamed to prevent overwriting

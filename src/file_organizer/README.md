@@ -6,4 +6,5 @@
 -> __init__.py
 -> main.py
 -> organizer.py
+-> categories.py
 ```

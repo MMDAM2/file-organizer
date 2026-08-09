@@ -4,8 +4,8 @@ requires = ["uv_build>=0.12.2,<0.13.0"]
 build-backend = "uv_build"
 
 [project]
-name = "hidden"
-version = "1.0.0"
+name = "file-organizer"
+version = "1.0.1"
 description = "A file organizer that, well, organizes a folder"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -16,7 +16,7 @@ authors = [
 dependencies = []
 
 [project.scripts]
-projects = "projects:organizer"
+projects = "projects:file_organizer"
 
 [tool.ruff]
 line-length = 100

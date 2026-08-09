@@ -32,7 +32,7 @@ def organize_folder() -> None:
 
     window = tk.Tk()
     window.title("Folder")
-    window.geometry("400x150")
+    window.geometry("400x250")
     window.resizable(width=False, height=False)
     window.protocol("WM_DELETE_WINDOW", window.quit)
 
@@ -40,7 +40,7 @@ def organize_folder() -> None:
     txt1.pack()
 
     btn2 = tk.Button(window, text="Browse", bg="yellow", command=browse)
-    btn2.pack()
+    btn2.pack_configure(pady=5)
 
     show_get = tk.Label(window)
     show_get.pack()
@@ -78,14 +78,14 @@ def organize_folder() -> None:
     org_button.pack()
 
     back_button = tk.Button(window, text="Return to menu", bg="red", command=back)
-    back_button.pack_configure(pady=5)
+    back_button.pack_configure()
 
     window.mainloop()
 
 
 root: tk.Tk = tk.Tk()  # Amir nabayad az 'ttk.Tk' estefade koni kar nemikone
 root.title("File Organizer")
-root.geometry("400x150")
+root.geometry("400x200")
 root.resizable(width=False, height=False)
 
 # cSpell: words padx pady

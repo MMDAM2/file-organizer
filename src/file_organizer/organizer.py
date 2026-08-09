@@ -2,14 +2,20 @@
 
 """Used by `main.py`"""
 
+import logging
 import shutil
 from pathlib import Path
 
-from file_organizer.categories import EXTENSIONS
+from .categories import EXTENSIONS
+
+logging.basicConfig(
+    filename="organizer.log", level=logging.DEBUG, format="%(levelname)s: %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 
 def organizer(
-    path: str,
+    path: str | Path,
 ) -> tuple[int, int, bool]:
     """Organizes the given folder based on the filename's suffix (extension)
 
@@ -38,8 +44,14 @@ def organizer(
         total += 1
 
         category: str = EXTENSIONS.get(item.suffix.lower(), "Other")
+        if not item.suffix in EXTENSIONS:
+            logger.debug("Unknown file extension for %s", item.suffix)
 
         destination: Path = folder / category
+
+        if destination.exists():
+            logger.debug("Destination already exists: %s", destination)
+
         destination.mkdir(exist_ok=True)
 
         new_location: Path = destination / item.name
@@ -48,10 +60,12 @@ def organizer(
 
         while new_location.exists():
             new_name: str = f"{item.stem} ({counter}){item.suffix}"
+            logger.debug("Renamed %s to %s for conflict prevention", item.name, new_name)
             new_location: Path = destination / new_name
             counter += 1
 
-        _ = shutil.move(item, new_location)
+        shutil.move(item, new_location)
+        logger.info("Moved %s -> %s", item, new_location)
         moved += 1
 
     return total, moved, True

@@ -23,7 +23,7 @@ jobs:
       - run: uv sync --locked --all-extras --dev
 
       - name: Run Pylint
-        run: uv run pylint src/hidden --fail-under=8.5
+        run: uv run pylint src/file_organizer --fail-under=8.5
 
   test:
     runs-on: ${{ matrix.os }}
