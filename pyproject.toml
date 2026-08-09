@@ -16,7 +16,7 @@ authors = [
 dependencies = []
 
 [project.scripts]
-projects = "projects:hidden"
+projects = "projects:organizer"
 
 [tool.ruff]
 line-length = 100
