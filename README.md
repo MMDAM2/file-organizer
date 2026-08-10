@@ -6,6 +6,7 @@
 
 - Organizes files based on their extensions
 - Automatically handles duplicate filenames
+- Features a entry level GUI
 
 ## Installation
 
@@ -24,11 +25,17 @@ cd file_organizer
 
 - Make the file executable:
 
+> [!NOTE]
+> You can skip this part in Windows
+
 ```bash
 chmod +x src/file_organizer/main.py
 ```
 
 - Run the file using:
+
+> [!NOTE]
+> You can also skip this in Windows :point_down:
 
 ```bash
 src/hidden/main.py
@@ -65,7 +72,7 @@ python3 src/file_organizer/main.py
 -> pyproject.toml
 ```
 
-<!-- link markdown: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax  -->
+<!-- Github Markdown Link: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax  -->
 <!-- cSpell: disable-next-line  -->
 <!-- mikhay in zaban ro yad begiri az link bala estefade kon -->
 

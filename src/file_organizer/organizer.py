@@ -27,6 +27,9 @@ def organizer(
     """
     # __file__ is the script's directory
     folder: Path = Path(path).expanduser().resolve()
+    if not folder.exists():
+        logger.debug("Folder doesn't exist, terminating...")
+        return 0, 0, False
 
     total: int = 0
     moved: int = 0
@@ -36,6 +39,7 @@ def organizer(
     for item in folder.iterdir():
         if item.is_file():
             files.append(item)
+            logger.debug("Added %s to the list", item)
 
     for item in files:
         if item.parent.name in EXTENSIONS.values():
