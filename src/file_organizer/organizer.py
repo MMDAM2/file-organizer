@@ -6,7 +6,7 @@ import logging
 import shutil
 from pathlib import Path
 
-from .categories import EXTENSIONS
+from categories import EXTENSIONS
 
 logging.basicConfig(
     filename="organizer.log", level=logging.DEBUG, format="%(levelname)s: %(message)s"
