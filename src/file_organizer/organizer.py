@@ -6,12 +6,15 @@ import logging
 import shutil
 from pathlib import Path
 
-from categories import EXTENSIONS
+from file_organizer.categories import EXTENSIONS
 
-#اینم یه مشکلی داشت برا همون . رو حذف کردم👆
+log_path = Path(__file__).parent / "log"
+log_path.mkdir(exist_ok=True)
 
 logging.basicConfig(
-    filename="organizer.log", level=logging.DEBUG, format="%(levelname)s: %(message)s"
+    filename=log_path / "organizer.log",
+    level=logging.DEBUG,
+    format="%(levelname)s: %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -22,7 +25,7 @@ def organizer(
     """Organizes the given folder based on the filename's suffix (extension)
 
     Args:
-        path (str): _description_
+        path (str | Path): Give a Path or a string depending on the usage
 
     Returns:
         tuple[int, int, bool]: Returns the total amount processing, moved files, and the success
@@ -73,5 +76,8 @@ def organizer(
         shutil.move(item, new_location)
         logger.info("Moved %s -> %s", item, new_location)
         moved += 1
+
+    if total == 0:
+        logger.debug("No file has been moved.")
 
     return total, moved, True

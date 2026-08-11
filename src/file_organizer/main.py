@@ -1,18 +1,29 @@
-##!/usr/bin/env python3
-# خط بالارو برا ویندوز نمیشد حذف کردم
+#!/usr/bin/env python3
 
 """Main app"""
 
+import logging
 import tkinter as tk
+from pathlib import Path
 from tkinter import (  # TODO: Use `filedialog` for target directory
     filedialog,
     messagebox,
     ttk,
 )
 
-from organizer import organizer
+from file_organizer.organizer import organizer
 
 # filedialog.askdirectory()
+
+log_path = Path(__file__).parent / "log"
+log_path.mkdir(exist_ok=True)
+
+logging.basicConfig(
+    filename=log_path / "main.log",
+    level=logging.DEBUG,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def browse():
@@ -22,9 +33,6 @@ def browse():
         show_get.config(text="Empty", fg="white", bg="gray")
     txt1.insert(0, path)
 
-    
-
-    
 
 def on_click_button(path: str) -> bool | None:
 
@@ -51,8 +59,6 @@ def on_click_button(path: str) -> bool | None:
     return None
 
 
-
-
 window = tk.Tk()
 window.title("Folder")
 window.geometry("400x250")
@@ -65,7 +71,7 @@ txt1 = ttk.Entry(window, width=40)
 txt1.pack()
 
 btn2 = tk.Button(window, text="Browse", bg="yellow", command=browse)  # type: ignore
-btn2.pack_configure(pady=5)
+btn2.pack()
 
 show_get = tk.Label(window)
 show_get.pack()
@@ -76,7 +82,7 @@ org_button = tk.Button(
     bg="green",
     command=lambda: on_click_button(txt1.get()),  # type: ignore
 )
-org_button.pack(pady= 10)
+org_button.pack(pady=10)
 
 credit = tk.Label(window, text="Made By :\nMobin Saghebi\nMMDAM2", fg="gray")
 credit.pack_configure(pady=10)
