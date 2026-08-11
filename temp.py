@@ -22,9 +22,7 @@ def mmd():
 
     kar_ha = tk.Label(
         window,
-        text="""Tkinteret ro yek zare dorost kon bad shekl shode, 
-        az ttk.Tk ham estefade nakon vojood nadare, 
-        va boro filedialog tkinter ro yad begir az tarigh oon az user file bekhah\n انجام شد✅""",
+        text="Boro log kardan barname ro yad begir,\n baraye temp ham baraye raftan be\n khat badi az '\\n' estefade kon",
     )
     kar_ha.pack_configure(pady=5)
 
