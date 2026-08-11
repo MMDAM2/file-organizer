@@ -8,6 +8,8 @@ from pathlib import Path
 
 from categories import EXTENSIONS
 
+#اینم یه مشکلی داشت برا همون . رو حذف کردم👆
+
 logging.basicConfig(
     filename="organizer.log", level=logging.DEBUG, format="%(levelname)s: %(message)s"
 )

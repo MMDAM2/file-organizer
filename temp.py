@@ -47,7 +47,7 @@ def mobin():
     bb.pack_configure()
 
     kar_ha = tk.Label(
-        window, text="انجام دادم حالا بگو چیکار کنم\n در ضمن برو تست کن ببین باگی چیزی نداره"
+        window, text="hanooz kamelesh nakardam vali bebin bug ya chizi nadare"
     )
     kar_ha.pack_configure(pady=5)
 
