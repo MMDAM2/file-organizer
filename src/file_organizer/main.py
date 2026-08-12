@@ -29,13 +29,12 @@ logger = logging.getLogger(__name__)
 def browse():
     path = filedialog.askdirectory(title="Select a folder")
     if path == "":
-        messagebox.showwarning("Warning", "The given directory does not exist")
+        messagebox.showwarning("Warning", "The given directory does not exist", icon="question")
         show_get.config(text="Empty", fg="white", bg="gray")
     txt1.insert(0, path)
 
 
 def on_click_button(path: str) -> bool | None:
-
     try:
         (
             total,
