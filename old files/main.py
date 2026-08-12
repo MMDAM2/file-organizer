@@ -75,7 +75,7 @@ def organize_folder() -> None:
         bg="green",
         command=lambda: on_click_button(txt1.get()),
     )
-    org_button.pack(pady= 10)
+    org_button.pack(pady=10)
 
     back_button = tk.Button(window, text="Return to menu", bg="red", command=back)
     back_button.pack_configure(pady=5)

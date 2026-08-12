@@ -44,9 +44,7 @@ def mobin():
     bb = tk.Button(window, text="Return to menu", bg="red", command=back)
     bb.pack_configure()
 
-    kar_ha = tk.Label(
-        window, text="hanooz kamelesh nakardam vali bebin bug ya chizi nadare"
-    )
+    kar_ha = tk.Label(window, text="hanooz kamelesh nakardam vali bebin bug ya chizi nadare")
     kar_ha.pack_configure(pady=5)
 
     window.mainloop()

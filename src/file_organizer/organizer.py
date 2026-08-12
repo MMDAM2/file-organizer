@@ -3,8 +3,8 @@
 """Used by `main.py`"""
 
 import logging
-import shutil
-from pathlib import Path
+import shutil  # For moving the files
+from pathlib import Path  # `os.path` is stupid, let's use pathlib instead
 
 from file_organizer.categories import EXTENSIONS
 
@@ -32,52 +32,86 @@ def organizer(
     """
     # __file__ is the script's directory
     folder: Path = Path(path).expanduser().resolve()
+
+    # Check if the folder doesn't exist, wait
     if not folder.exists():
         logger.debug("Folder doesn't exist, terminating...")
         return 0, 0, False
 
+    # Initialize the total amount of processed files
+    # and actually moved ones
     total: int = 0
     moved: int = 0
 
     files: list[Path] = []
 
+    # Doing a list comprehension is just taking a snapshot
+    # Doing it outside of the list is a bit slower but
+    # if the user removed something inside their files
+    # and the hard drive is slow af
+    # This should not catch the deleted file unless
+    # it was caught after the file getting added to the `files` list
+    # These are all cover ups so i can include logging
     for item in folder.iterdir():
         if item.is_file():
             files.append(item)
             logger.debug("Added %s to the list", item)
 
+    # Check if the folder category already exist in the
+    # parent directory of the directory given by user
     for item in files:
         if item.parent.name in EXTENSIONS.values():
             continue
 
+        item_extension_lowercased = item.suffix.lower()
+        # Add 1 as 1 processed file
         total += 1
 
-        category: str = EXTENSIONS.get(item.suffix.lower(), "Other")
-        if not item.suffix in EXTENSIONS:
+        # Get the extension type for each file extension
+        category: str = EXTENSIONS.get(
+            item_extension_lowercased, "Other"
+        )  # If the `EXTENSIONS` didn't contain it, give `Other` back
+        if not item_extension_lowercased in EXTENSIONS:
             logger.debug("Unknown file extension for %s", item.suffix)
 
+        # Make a new `Path` item
+        ## Thank god I'm type hinting all of this
         destination: Path = folder / category
 
         if destination.exists():
             logger.debug("Destination already exists: %s", destination)
 
+        # Make the destination (a.k.a, the file category of the file extension)
+        # If it exists, don't give a fuck about creating a folder and continue
         destination.mkdir(exist_ok=True)
 
-        new_location: Path = destination / item.name
+        # Change the item location
+        item_location: Path = destination / item.name
 
+        # Make a counter for duplicate files,
+        # The counter will be reinitialized after every iteration
+        # So no worries about making a new variable each time
         counter: int = 1
 
-        while new_location.exists():
+        # If the current moving file already exists at the file destination
+        # Change it's name
+        while item_location.exists():
             new_name: str = f"{item.stem} ({counter}){item.suffix}"
             logger.debug("Renamed %s to %s for conflict prevention", item.name, new_name)
-            new_location: Path = destination / new_name
+            item_location: Path = destination / new_name
             counter += 1
 
-        shutil.move(item, new_location)
-        logger.info("Moved %s -> %s", item, new_location)
+        # Actually move the file
+        shutil.move(item, item_location)
+        logger.info("Moved %s -> %s", item, item_location)
+
+        # Now it's one moved file and processed after one iteration
         moved += 1
 
+    # If no files were processed in the given directory
+    # log it...
     if total == 0:
         logger.debug("No file has been moved.")
 
+    # Return and deconstruct in the main program
     return total, moved, True
