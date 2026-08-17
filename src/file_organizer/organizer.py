@@ -2,21 +2,21 @@
 
 """Used by `main.py`"""
 
-import logging
-import shutil  # For moving the files
+import logging as log
+from shutil import move  # For moving the files
 from pathlib import Path  # `os.path` is stupid, let's use pathlib instead
 
-from file_organizer.categories import EXTENSIONS
+from categories import EXTENSIONS
 
 log_path = Path(__file__).parent / "log"
 log_path.mkdir(exist_ok=True)
 
-logging.basicConfig(
+log.basicConfig(
     filename=log_path / "organizer.log",
-    level=logging.DEBUG,
+    level=log.DEBUG,
     format="%(levelname)s: %(message)s",
 )
-logger = logging.getLogger(__name__)
+logger = log.getLogger(__name__)
 
 
 def organizer(
@@ -46,12 +46,12 @@ def organizer(
     files: list[Path] = []
 
     # Doing a list comprehension is just taking a snapshot
-    # Doing it outside of the list is a bit slower but
+    # Doing it outside the list is a bit slower but
     # if the user removed something inside their files
     # and the hard drive is slow af
     # This should not catch the deleted file unless
     # it was caught after the file getting added to the `files` list
-    # These are all cover ups so i can include logging
+    # These are all cover-ups so I can include logging
     for item in folder.iterdir():
         if item.is_file():
             files.append(item)
@@ -94,7 +94,7 @@ def organizer(
         counter: int = 1
 
         # If the current moving file already exists at the file destination
-        # Change it's name
+        # Change its name
         while item_location.exists():
             new_name: str = f"{item.stem} ({counter}){item.suffix}"
             logger.debug("Renamed %s to %s for conflict prevention", item.name, new_name)
@@ -102,7 +102,7 @@ def organizer(
             counter += 1
 
         # Actually move the file
-        shutil.move(item, item_location)
+        move(item, item_location)
         logger.info("Moved %s -> %s", item, item_location)
 
         # Now it's one moved file and processed after one iteration

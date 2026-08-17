@@ -2,6 +2,8 @@
 
 from typing import Final
 
+# You can edit this list to support more extensions
+# By adding in `extension`: `category` syntax
 EXTENSIONS: Final[dict[str, str]] = {
     ".jpg": "Images",
     ".jpeg": "Images",
