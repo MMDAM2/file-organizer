@@ -6,7 +6,12 @@
 
 - Organizes files based on their extensions
 - Automatically handles duplicate filenames
-- Features a entry level GUI
+- Features an entry level GUI
+
+> [!WARNING]
+> This program should not be used as a main solution to organize files
+
+>Use a well known and better maintained file organizer
 
 ## Installation
 
@@ -14,6 +19,8 @@
 
 - Python v3.10+
 
+> [!NOTE]
+> It mostly uses standard library so no worry for the dependencies
 ### Steps
 
 - Clone the repository:
@@ -72,7 +79,7 @@ python3 src/file_organizer/main.py
 -> pyproject.toml
 ```
 
-<!-- Github Markdown Link: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax  -->
+<!-- GitHub Markdown Link: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax  -->
 <!-- cSpell: disable-next-line  -->
 <!-- mikhay in zaban ro yad begiri az link bala estefade kon -->
 

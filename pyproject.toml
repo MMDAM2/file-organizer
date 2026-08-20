@@ -5,7 +5,7 @@ build-backend = "uv_build"
 
 [project]
 name = "file-organizer"
-version = "1.0.1"
+version = "1.0.2"
 description = "A file organizer that, well, organizes a folder"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -30,5 +30,5 @@ disable = ["fixme", "unused-argument"]
 dev = [
     "pylint==4.0.7",
     "pytest>=9.1.1",
-    "ruff==0.16.3",
+    "ruff==0.16.4",
 ]

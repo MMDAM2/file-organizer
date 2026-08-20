@@ -20,4 +20,4 @@ prog.txt
 # Editor files
 *.code-workspace
 .vscode
-.idea/
+.idea
