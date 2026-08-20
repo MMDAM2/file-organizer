@@ -1,21 +1,23 @@
-# organizer.py
-
 """Used by `main.py`"""
 
 import logging as log
-from shutil import move  # For moving the files
 from pathlib import Path  # `os.path` is stupid, let's use pathlib instead
+from shutil import move  # For moving the files
 
 from file_organizer.categories import EXTENSIONS
 
+# Make a new log directory if not exists
 log_path: Path = Path(__file__).parent / "log"
 log_path.mkdir(exist_ok=True)
 
+# Logging configuration
 log.basicConfig(
     filename=log_path / "organizer.log",
     level=log.DEBUG,
     format="%(levelname)s: %(message)s",
 )
+
+# Get a log file with this file's own name
 logger: log.Logger = log.getLogger(name=__name__)
 
 
@@ -102,7 +104,7 @@ def organizer(
             counter += 1
 
         # Actually move the file
-        move(item, item_location) # shutil.move(item, item_location)
+        move(src=item, dst=item_location)  # shutil.move(item, item_location)
         logger.info("Moved %s -> %s", item, item_location)
 
         # Now it's one moved file and processed after one iteration
