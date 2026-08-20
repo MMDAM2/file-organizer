@@ -30,7 +30,7 @@ def organizer(
         path (str | Path): Give a Path or a string depending on the usage
 
     Returns:
-        tuple[int, int, bool]: Returns the total amount processing, moved files, and the success
+        `tuple[int, int, bool]`: Returns the total amount processing, moved files, and the success status
     """
     # __file__ is the script's directory
     folder: Path = Path(path).expanduser().resolve()
