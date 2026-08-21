@@ -145,7 +145,7 @@ def dry_run_check(check: bool) -> None:
     if not txt1.get():  # If no path is given, throw a window
         messagebox.showerror(title="Empty", message="Empty directory is given")
         return
-    if check:  # Check if dry run is enabled
+    if not check:  # Check if dry run is enabled
         organize_files(path=txt1.get())
     else:
         show_preview(op_preview=preview(input_path=txt1.get()))
