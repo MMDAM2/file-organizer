@@ -30,7 +30,8 @@ def organizer(
         path (str | Path): Give a Path or a string depending on the usage
 
     Returns:
-        `tuple[int, int, bool]`: Returns the total amount processing, moved files, and the success status
+        `tuple[int, int, bool]`:
+        Returns the total amount processing, moved files, and the success status
     """
     # __file__ is the script's directory
     folder: Path = Path(path).expanduser().resolve()
@@ -104,7 +105,11 @@ def organizer(
             counter += 1
 
         # Actually move the file
-        move(src=item, dst=item_location)  # shutil.move(item, item_location)
+        try:
+            move(src=item, dst=item_location)  # shutil.move(item, item_location)
+        except FileNotFoundError as e:
+            logger.error("An unexpected error happened: %s", e)
+            return total, moved, False
         logger.info("Moved %s -> %s", item, item_location)
 
         # Now it's one moved file and processed after one iteration
@@ -117,3 +122,23 @@ def organizer(
 
     # Return and deconstruct in the main program
     return total, moved, True
+
+
+def preview(input_path: str) -> list[tuple[str, Path]]:
+    """Take a Preview of the following changes
+
+    Args:
+        input_path (str): The user given path
+
+    Returns:
+        `list[tuple[str, Path]]`: a Preview of the whole operation
+    """
+    path: Path = Path(input_path).expanduser().resolve()
+    files: list[tuple[str, Path]] = []
+
+    for item in path.iterdir():
+        if item.is_file():
+            category: str = EXTENSIONS.get(item.suffix.lower(), "Other")
+            files.append((item.name, item.parent / category))
+
+    return files

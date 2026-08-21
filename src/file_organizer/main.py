@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # Do NOT remove the line above or I'll kill you
-# cSpell: words Mobin Saghebi MMDAM padx pady
+# cSpell: words Mobin Saghebi MMDAM padx pady onvalue offvalue yscrollcommand
 
 """Main app"""
 
 # import logging  # Logging the app
 import os
 import tkinter as tk  # The basic GUI framework
-from subprocess import run
+from pathlib import Path
+from subprocess import run as command
 
 # from pathlib import Path  # No `os.path` allowed
 from tkinter import (
@@ -16,11 +17,14 @@ from tkinter import (
     ttk,
 )
 
-from file_organizer.organizer import organizer
+from file_organizer.organizer import organizer, preview
 
-if os.environ.get(key="TERM", default=None) is not None:
-    # subprocess.run(["cls"] if os.name == "nt" else ["clear"], shell=True, check=True)
-    run(args=["cls"] if os.name == "nt" else ["clear"], shell=True, check=True)
+if os.name != "posix":
+    command(args=["cls"], shell=True, check=True)
+else:
+    if os.environ.get(key="TERM", default=None) is not None:
+        # subprocess.run(["cls"] if os.name == "nt" else ["clear"], shell=True, check=True)
+        command(args=["clear"], shell=True, check=True)
 
 # Make a 'log' folder
 # log_path: Path = Path(__file__).parent / "log"  # In this case, __file__ is the script's path
@@ -51,7 +55,51 @@ def browse() -> None:
     txt1.insert(index=0, string=path)
 
 
-def on_click_button(path: str) -> None:
+def show_preview(op_preview: list[tuple[str, Path]]) -> None:
+    """Show a preview of the whole operation
+
+    Args:
+        op_preview (list[tuple[str, Path]]): a list containing the filename and it's destination
+    """
+    preview_window: tk.Toplevel = tk.Toplevel(master=window)
+    preview_window.title(string="Preview")
+    preview_window.geometry(newGeometry="600x400")
+
+    label: tk.Label = tk.Label(master=preview_window, text="The following files will be moved:")
+    label.pack(anchor="w", padx=10, pady=(10, 5))
+
+    frame: tk.Frame = tk.Frame(master=preview_window)
+
+    scrollbar: ttk.Scrollbar = ttk.Scrollbar(master=frame)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+    listbox: tk.Listbox = tk.Listbox(master=frame, yscrollcommand=scrollbar.set)
+    listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+    scrollbar.config(command=listbox.yview)
+
+    for name, dest in op_preview:
+        listbox.insert(tk.END, f"{name} -> {dest}")
+
+    preview_button_frame: tk.Frame = tk.Frame(master=preview_window)
+    preview_button_frame.pack(fill=tk.X, padx=10, pady=10)
+
+    cancel_button: ttk.Button = ttk.Button(
+        master=preview_button_frame, text="Cancel", command=preview_window.destroy
+    )
+    cancel_button.pack(side=tk.RIGHT, padx=(5, 0))
+
+    continue_button: ttk.Button = ttk.Button(
+        master=preview_button_frame,
+        text="Continue",
+        command=lambda: organize_files(path=txt1.get()),
+    )
+    continue_button.pack(side=tk.RIGHT)
+
+    frame.pack(fill=tk.BOTH, padx=10, pady=10, expand=True)
+
+
+def organize_files(path: str) -> None:
     """The handler for button click
 
     Args:
@@ -62,13 +110,13 @@ def on_click_button(path: str) -> None:
         total,
         moved,
         success,
-    ) = organizer(path=path)
+    ) = organizer(path)
     # Check if organizing the files actually worked
     if success:
         messagebox.showinfo(
             title="Completed",
             message=f"""Operation completed successfully
-            
+
             Total files: {total}
             Moved files: {moved}""",
         )
@@ -76,10 +124,25 @@ def on_click_button(path: str) -> None:
         messagebox.showerror(
             title="Failed",
             message=f"""Operation failed
-            
+
             Total files: {total}
             Moved files: {moved}""",
         )
+
+
+def dry_run_check(check: bool) -> None:
+    """Check whether we should do a dry run
+
+    Args:
+        check (bool): Status for dry run availability
+    """
+    if not txt1.get():
+        messagebox.showwarning(title="Empty", message="Empty directory is given")
+        return
+    if check:
+        organize_files(path=txt1.get())
+    else:
+        show_preview(op_preview=preview(input_path=txt1.get()))
 
 
 # Initialize a window
@@ -87,30 +150,45 @@ def on_click_button(path: str) -> None:
 window: tk.Tk = tk.Tk()
 window.title(string="Folder")
 
-window.geometry(newGeometry="400x250")  # Window size (w, h)
-window.resizable(width=False, height=False)
+dry_run: tk.BooleanVar = tk.BooleanVar(master=window)
 
-txt1: ttk.Entry = ttk.Entry(master=window, width=40)
-txt1.pack()
+window.geometry(newGeometry="500x350")  # Window size (w, h)
+window.resizable(width=True, height=False)
 
-btn2 = tk.Button(master=window, text="Browse", bg="yellow", command=browse)
-btn2.pack()
+button_frame: tk.Frame = tk.Frame(master=window)
+
+txt1: ttk.Entry = ttk.Entry(master=window)
+txt1.pack(fill=tk.X, expand=True, pady=10)
+
+btn2: tk.Button = tk.Button(master=button_frame, text="Browse", bg="yellow", command=browse)
+btn2.pack(fill=tk.X)
 
 show_get: tk.Label = tk.Label(master=window)
 show_get.pack()
 
+checkbutton: ttk.Checkbutton = ttk.Checkbutton(
+    master=window,
+    text="Dry run",
+    variable=dry_run,
+    onvalue=True,
+    offvalue=False,
+)
+checkbutton.pack(pady=10, side=tk.TOP)
+
 # We're using a lambda because we need to pass an argument
 org_button: tk.Button = tk.Button(
-    master=window,
+    master=button_frame,
     text="Organize folder",
     bg="green",
-    command=lambda: on_click_button(path=txt1.get()),
+    command=lambda: dry_run_check(check=dry_run.get()),
 )
 
-# pady is essentially putting a space to breath in the userspace
-org_button.pack(pady=10)
+# pady is essentially putting a space to breath in the userspace between widgets
+org_button.pack(side=tk.LEFT, pady=10, expand=True, fill=tk.X)
 
-credit: tk.Label = tk.Label(master=window, text="Made By :\nMobin Saghebi\nMMDAM2", fg="gray")
+button_frame.pack(anchor="w", fill=tk.BOTH)
+
+credit: tk.Label = tk.Label(master=window, text="Made By: Mobin Saghebi, MMDAM2", fg="gray")
 # IDK why this exists
 credit.pack_configure(pady=10)
 
