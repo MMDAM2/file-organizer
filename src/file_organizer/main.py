@@ -152,13 +152,14 @@ window.title(string="Folder")
 
 dry_run: tk.BooleanVar = tk.BooleanVar(master=window)
 
-window.geometry(newGeometry="500x350")  # Window size (w, h)
+window.geometry(newGeometry="500x325")  # Window size (w, h)
 window.resizable(width=True, height=False)
+window.minsize(460, 325)
 
 button_frame: tk.Frame = tk.Frame(master=window)
 
 txt1: ttk.Entry = ttk.Entry(master=window)
-txt1.pack(fill=tk.X, expand=True, pady=10)
+txt1.pack(fill=tk.X, expand=True)
 
 btn2: tk.Button = tk.Button(master=button_frame, text="Browse", bg="yellow", command=browse)
 btn2.pack(fill=tk.X)
@@ -168,7 +169,7 @@ show_get.pack()
 
 checkbutton: ttk.Checkbutton = ttk.Checkbutton(
     master=window,
-    text="Dry run",
+    text="Dry run (Experimental)",
     variable=dry_run,
     onvalue=True,
     offvalue=False,
@@ -186,7 +187,7 @@ org_button: tk.Button = tk.Button(
 # pady is essentially putting a space to breath in the userspace between widgets
 org_button.pack(side=tk.LEFT, pady=10, expand=True, fill=tk.X)
 
-button_frame.pack(anchor="w", fill=tk.BOTH)
+button_frame.pack(anchor=tk.W, fill=tk.BOTH)
 
 credit: tk.Label = tk.Label(master=window, text="Made By: Mobin Saghebi, MMDAM2", fg="gray")
 # IDK why this exists
