@@ -10,8 +10,8 @@
 
 > [!WARNING]
 > This program should not be used as a main solution to organize files
-
->Use a well known and better maintained file organizer
+>
+> Use a well known and better maintained file organizer
 
 ## Installation
 
@@ -21,6 +21,7 @@
 
 > [!NOTE]
 > It mostly uses standard library so no worry for the dependencies
+
 ### Steps
 
 - Clone the repository:
