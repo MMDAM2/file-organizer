@@ -134,11 +134,12 @@ def preview(input_path: str) -> list[tuple[str, Path]]:
         `list[tuple[str, Path]]`: a Preview of the whole operation
     """
     path: Path = Path(input_path).expanduser().resolve()
-    files: list[tuple[str, Path]] = []
+    files: list[tuple[str, Path]] = []  # Initialize a list
 
-    for item in path.iterdir():
-        if item.is_file():
+    for item in path.iterdir():  # Iterate over the directory
+        if item.is_file():  # Check if the current item is a file or a directory
             category: str = EXTENSIONS.get(item.suffix.lower(), "Other")
-            files.append((item.name, item.parent / category))
+            files.append((item.name, item.parent / category))  # Append it
 
+    # Return the list
     return files

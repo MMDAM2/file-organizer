@@ -61,19 +61,25 @@ def show_preview(op_preview: list[tuple[str, Path]]) -> None:
     Args:
         op_preview (list[tuple[str, Path]]): a list containing the filename and it's destination
     """
-    preview_window: tk.Toplevel = tk.Toplevel(master=window)
-    preview_window.title(string="Preview")
-    preview_window.geometry(newGeometry="600x400")
+    preview_window: tk.Toplevel = tk.Toplevel(master=window)  # Make window on top of the root one
+    preview_window.deiconify()
+    preview_window.attributes("-topmost", 1)
+    preview_window.title(string="Preview")  # Window title
+    preview_window.geometry(newGeometry="600x400")  # Window size (w: width, h: height)
 
     label: tk.Label = tk.Label(master=preview_window, text="The following files will be moved:")
-    label.pack(anchor="w", padx=10, pady=(10, 5))
+    label.pack(
+        anchor="w", padx=10, pady=(10, 5)
+    )  # Change the label direction to left (anchor w is basically west or left)
 
-    frame: tk.Frame = tk.Frame(master=preview_window)
+    frame: tk.Frame = tk.Frame(master=preview_window)  # Make a frame for the listbox
 
-    scrollbar: ttk.Scrollbar = ttk.Scrollbar(master=frame)
+    scrollbar: ttk.Scrollbar = ttk.Scrollbar(master=frame)  # Make a scrollbar
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-    listbox: tk.Listbox = tk.Listbox(master=frame, yscrollcommand=scrollbar.set)
+    listbox: tk.Listbox = tk.Listbox(
+        master=frame, yscrollcommand=scrollbar.set
+    )  # A list for representing changes
     listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
     scrollbar.config(command=listbox.yview)
@@ -81,22 +87,22 @@ def show_preview(op_preview: list[tuple[str, Path]]) -> None:
     for name, dest in op_preview:
         listbox.insert(tk.END, f"{name} -> {dest}")
 
-    preview_button_frame: tk.Frame = tk.Frame(master=preview_window)
+    preview_button_frame: tk.Frame = tk.Frame(master=preview_window)  # Make a frame for the buttons
     preview_button_frame.pack(fill=tk.X, padx=10, pady=10)
 
     cancel_button: ttk.Button = ttk.Button(
         master=preview_button_frame, text="Cancel", command=preview_window.destroy
-    )
+    )  # Make a button for cancelling the operation
     cancel_button.pack(side=tk.RIGHT, padx=(5, 0))
 
     continue_button: ttk.Button = ttk.Button(
         master=preview_button_frame,
         text="Continue",
         command=lambda: organize_files(path=txt1.get()),
-    )
+    )  # Make a button to start processing the files
     continue_button.pack(side=tk.RIGHT)
 
-    frame.pack(fill=tk.BOTH, padx=10, pady=10, expand=True)
+    frame.pack(fill=tk.BOTH, padx=10, pady=10, expand=True)  # Expand the ListBox from both sides
 
 
 def organize_files(path: str) -> None:
@@ -136,25 +142,29 @@ def dry_run_check(check: bool) -> None:
     Args:
         check (bool): Status for dry run availability
     """
-    if not txt1.get():
-        messagebox.showwarning(title="Empty", message="Empty directory is given")
+    if not txt1.get():  # If no path is given, throw a window
+        messagebox.showerror(title="Empty", message="Empty directory is given")
         return
-    if check:
+    if check:  # Check if dry run is enabled
         organize_files(path=txt1.get())
     else:
         show_preview(op_preview=preview(input_path=txt1.get()))
 
+
+# Note: fill=tk.Y means expand when window height changes
+# fill=tk.X means expand when window width changes
+# fill=tk.BOTH means expand when window size changes
 
 # Initialize a window
 
 window: tk.Tk = tk.Tk()
 window.title(string="Folder")
 
-dry_run: tk.BooleanVar = tk.BooleanVar(master=window)
+dry_run: tk.BooleanVar = tk.BooleanVar(master=window)  # Make a `tkinter` boolean
 
 window.geometry(newGeometry="500x325")  # Window size (w, h)
 window.resizable(width=True, height=False)
-window.minsize(460, 325)
+window.minsize(460, 325)  # The minimum requirements for window size
 
 button_frame: tk.Frame = tk.Frame(master=window)
 
@@ -167,14 +177,14 @@ btn2.pack(fill=tk.X)
 show_get: tk.Label = tk.Label(master=window)
 show_get.pack()
 
-checkbutton: ttk.Checkbutton = ttk.Checkbutton(
+checkbutton: ttk.Checkbutton = ttk.Checkbutton(  # Make a checkbox
     master=window,
     text="Dry run (Experimental)",
     variable=dry_run,
     onvalue=True,
     offvalue=False,
 )
-checkbutton.pack(pady=10, side=tk.TOP)
+checkbutton.pack(pady=10, side=tk.TOP)  # Align the button in the middle
 
 # We're using a lambda because we need to pass an argument
 org_button: tk.Button = tk.Button(
