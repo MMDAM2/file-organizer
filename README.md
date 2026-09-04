@@ -67,7 +67,6 @@ python3 src/file_organizer/main.py
   -> file_organizer
     -> README.md
     -> main.py
-    -> __init__.py
     -> organizer.py
     -> categories.py
 -> tests

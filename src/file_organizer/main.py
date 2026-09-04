@@ -17,7 +17,7 @@ from tkinter import (
     ttk,
 )
 
-from file_organizer.organizer import organizer, preview
+from organizer import organizer, preview
 
 if os.name != "posix":
     command(args=["cls"], shell=True, check=True)
@@ -41,10 +41,9 @@ else:
 # logger: logging.Logger = logging.getLogger(name=__name__)
 # Not logging for now
 
-
 def browse() -> None:
     """Open a file browser"""
-    path: str = filedialog.askdirectory(title="Select a folder")
+    path: str = filedialog.askdirectory(title="Select a folder", parent=window)
 
     # Check if there was a path provided
     if path == "":
@@ -164,15 +163,19 @@ dry_run: tk.BooleanVar = tk.BooleanVar(master=window)  # Make a `tkinter` boolea
 
 window.geometry(newGeometry="500x325")  # Window size (w, h)
 window.resizable(width=True, height=False)
-window.minsize(460, 325)  # The minimum requirements for window size
+window.minsize(width=360, height=325)  # The minimum requirements for window size
 
 button_frame: tk.Frame = tk.Frame(master=window)
+input_frame: tk.Frame = tk.Frame(master=window)
 
-txt1: ttk.Entry = ttk.Entry(master=window)
+lbl1: ttk.Label = ttk.Label(input_frame, text="Path:")
+lbl1.pack(side=tk.LEFT, pady=2)
+
+txt1: ttk.Entry = ttk.Entry(master=input_frame)
 txt1.pack(fill=tk.X, expand=True)
 
 btn2: tk.Button = tk.Button(master=button_frame, text="Browse", bg="yellow", command=browse)
-btn2.pack(fill=tk.X)
+btn2.pack(fill=tk.X, side=tk.RIGHT)
 
 show_get: tk.Label = tk.Label(master=window)
 show_get.pack()
@@ -197,6 +200,7 @@ org_button: tk.Button = tk.Button(
 # pady is essentially putting a space to breath in the userspace between widgets
 org_button.pack(side=tk.LEFT, pady=10, expand=True, fill=tk.X)
 
+input_frame.pack(anchor=tk.W, fill=tk.BOTH)
 button_frame.pack(anchor=tk.W, fill=tk.BOTH)
 
 credit: tk.Label = tk.Label(master=window, text="Made By: Mobin Saghebi, MMDAM2", fg="gray")

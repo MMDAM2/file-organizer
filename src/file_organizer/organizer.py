@@ -4,7 +4,7 @@ import logging as log
 from pathlib import Path  # `os.path` is stupid, let's use pathlib instead
 from shutil import move  # For moving the files
 
-from file_organizer.categories import EXTENSIONS
+from categories import EXTENSIONS
 
 # Make a new log directory if not exists
 log_path: Path = Path(__file__).parent / "log"
