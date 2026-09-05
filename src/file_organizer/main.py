@@ -17,7 +17,7 @@ from tkinter import (
     ttk,
 )
 
-from organizer import organizer, preview
+from .organizer import organizer, preview
 
 if os.name != "posix":
     command(args=["cls"], shell=True, check=True)
@@ -40,6 +40,7 @@ else:
 # # Get a logger with the app's name
 # logger: logging.Logger = logging.getLogger(name=__name__)
 # Not logging for now
+
 
 def browse() -> None:
     """Open a file browser"""
@@ -114,6 +115,7 @@ def organize_files(path: str) -> None:
     (
         total,
         moved,
+        failed,
         success,
     ) = organizer(path)
     # Check if organizing the files actually worked
@@ -130,6 +132,7 @@ def organize_files(path: str) -> None:
             title="Failed",
             message=f"""Operation failed
 
+            Unmoved/Failed files: {failed}
             Total files: {total}
             Moved files: {moved}""",
         )
@@ -147,7 +150,13 @@ def dry_run_check(check: bool) -> None:
     if not check:  # Check if dry run is enabled
         organize_files(path=txt1.get())
     else:
-        show_preview(op_preview=preview(input_path=txt1.get()))
+        op_preview, success = preview(input_path=txt1.get())
+        if not success:
+            messagebox.showerror(
+                title="Invalid path", message="The given path does not exist or is invalid"
+            )
+            return
+        show_preview(op_preview=op_preview)
 
 
 # Note: fill=tk.Y means expand when window height changes

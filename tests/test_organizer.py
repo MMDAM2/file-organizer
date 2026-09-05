@@ -1,6 +1,8 @@
+import os
+
 import pytest
 
-from file_organizer.organizer import organizer
+from file_organizer.organizer import organizer, preview
 
 
 @pytest.mark.parametrize(
@@ -38,10 +40,11 @@ def test_file_is_organized_into_correct_category(
     file = tmp_path / filename
     file.write_text("test")
 
-    total, moved, success = organizer(str(tmp_path))
+    total, moved, failed, success = organizer(str(tmp_path))
 
     assert total == 1
     assert moved == 1
+    assert failed == 0
     assert success is True
     assert (tmp_path / category / filename).exists()
 
@@ -50,10 +53,11 @@ def test_organizes_image(tmp_path):
     file = tmp_path / "photo.jpg"
     file.write_text("image")
 
-    total, moved, success = organizer(str(tmp_path))
+    total, moved, failed, success = organizer(str(tmp_path))
 
     assert total == 1
     assert moved == 1
+    assert failed == 0
     assert success is True
     assert (tmp_path / "Images" / "photo.jpg").exists()
 
@@ -62,10 +66,11 @@ def test_organizes_music(tmp_path):
     file = tmp_path / "song.mp3"
     file.write_text("music")
 
-    total, moved, success = organizer(str(tmp_path))
+    total, moved, failed, success = organizer(str(tmp_path))
 
     assert total == 1
     assert moved == 1
+    assert failed == 0
     assert success is True
     assert (tmp_path / "Music" / "song.mp3").exists()
 
@@ -183,10 +188,11 @@ def test_multiple_duplicates_are_renamed(tmp_path):
 
 
 def test_empty_directory(tmp_path):
-    total, moved, success = organizer(str(tmp_path))
+    total, moved, failed, success = organizer(str(tmp_path))
 
     assert total == 0
     assert moved == 0
+    assert failed == 0
     assert success is True
 
 
@@ -197,10 +203,11 @@ def test_already_organized_file_is_skipped(tmp_path):
     file = images / "photo.jpg"
     file.write_text("image")
 
-    total, moved, success = organizer(str(tmp_path))
+    total, moved, failed, success = organizer(str(tmp_path))
 
     assert total == 0
     assert moved == 0
+    assert failed == 0
     assert success is True
     assert file.exists()
 
@@ -214,10 +221,11 @@ def test_multiple_files(tmp_path):
     (tmp_path / "script.py").write_text("code")
     (tmp_path / "program.deb").write_text("package")
 
-    total, moved, success = organizer(str(tmp_path))
+    total, moved, failed, success = organizer(str(tmp_path))
 
     assert total == 7
     assert moved == 7
+    assert failed == 0
     assert success is True
 
     assert (tmp_path / "Images" / "photo.jpg").exists()
@@ -227,3 +235,98 @@ def test_multiple_files(tmp_path):
     assert (tmp_path / "Archives" / "archive.zip").exists()
     assert (tmp_path / "Code" / "script.py").exists()
     assert (tmp_path / "Packages" / "program.deb").exists()
+
+
+# --- New tests for the 4-tuple return / failure tracking ---
+
+
+def test_nonexistent_path_returns_zero_and_failure(tmp_path):
+    missing = tmp_path / "does_not_exist"
+
+    total, moved, failed, success = organizer(str(missing))
+
+    assert total == 0
+    assert moved == 0
+    assert failed == 0
+    assert success is False
+
+
+def test_path_is_a_file_not_a_directory_returns_failure(tmp_path):
+    file_path = tmp_path / "not_a_folder.txt"
+    file_path.write_text("i am a file")
+
+    total, moved, failed, success = organizer(str(file_path))
+
+    assert total == 0
+    assert moved == 0
+    assert failed == 0
+    assert success is False
+
+
+@pytest.mark.skipif(os.name == "nt", reason="chmod-based permission test is unreliable on Windows")
+def test_permission_error_is_tracked_as_failed_and_continues(tmp_path):
+    # One file we can move, one file whose destination folder we lock down
+    # so the move fails, to confirm failures are tracked and don't stop the batch
+    good_file = tmp_path / "good.jpg"
+    good_file.write_text("ok")
+
+    bad_file = tmp_path / "bad.mp3"
+    bad_file.write_text("blocked")
+
+    # Pre-create the Music destination folder as read-only so the move into it fails
+    music_dir = tmp_path / "Music"
+    music_dir.mkdir()
+    music_dir.chmod(0o500)
+
+    try:
+        total, moved, failed, success = organizer(str(tmp_path))
+
+        assert total == 2
+        assert moved == 1
+        assert failed == 1
+        assert success is False
+        assert (tmp_path / "Images" / "good.jpg").exists()
+    finally:
+        # Restore permissions so tmp_path cleanup doesn't fail
+        music_dir.chmod(0o700)
+
+
+# --- New tests for preview() ---
+
+
+def test_preview_lists_files_without_moving(tmp_path):
+    file = tmp_path / "photo.jpg"
+    file.write_text("image")
+
+    result, success = preview(str(tmp_path))
+
+    assert success is True
+    assert result == [("photo.jpg", tmp_path / "Images")]
+    # preview should not actually move anything
+    assert file.exists()
+
+
+def test_preview_empty_directory(tmp_path):
+    result, success = preview(str(tmp_path))
+
+    assert success is True
+    assert result == []
+
+
+def test_preview_nonexistent_path_returns_empty_and_failure(tmp_path):
+    missing = tmp_path / "does_not_exist"
+
+    result, success = preview(str(missing))
+
+    assert result == []
+    assert success is False
+
+
+def test_preview_path_is_a_file_not_a_directory_returns_failure(tmp_path):
+    file_path = tmp_path / "not_a_folder.txt"
+    file_path.write_text("i am a file")
+
+    result, success = preview(str(file_path))
+
+    assert result == []
+    assert success is False

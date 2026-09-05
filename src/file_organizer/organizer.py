@@ -4,7 +4,7 @@ import logging as log
 from pathlib import Path  # `os.path` is stupid, let's use pathlib instead
 from shutil import move  # For moving the files
 
-from categories import EXTENSIONS
+from .categories import EXTENSIONS
 
 # Make a new log directory if not exists
 log_path: Path = Path(__file__).parent / "log"
@@ -21,69 +21,73 @@ log.basicConfig(
 logger: log.Logger = log.getLogger(name=__name__)
 
 
+def find_files(path: Path) -> list[tuple[Path, Path]]:
+    """Find all organizable files in `path` paired with their destination folder.
+
+    Args:
+        path (Path): Directory to scan
+
+    Returns:
+        list[tuple[Path, Path]]: (file, destination_folder) pairs
+    """
+    files: list[tuple[Path, Path]] = []  # Initialize a empty list
+
+    # Iterate over each item in the given directory
+    for item in path.iterdir():
+        # If the item is not a file, skip it
+        if not item.is_file():
+            continue
+
+        # If the same category exists in parent directory
+        # skip it
+        if item.parent.name in EXTENSIONS.values():
+            continue
+
+        # Get the category name for the current item
+        category = EXTENSIONS.get(item.suffix.lower(), "Other")
+
+        # Include the item in the list
+        files.append((item, path / category))
+
+    # Return the resulting list
+    return files
+
+
 def organizer(
     path: str | Path,
-) -> tuple[int, int, bool]:
+) -> tuple[int, int, int, bool]:
     """Organizes the given folder based on the filename's suffix (extension)
 
     Args:
         path (str | Path): Give a Path or a string depending on the usage
 
     Returns:
-        `tuple[int, int, bool]`:
-        Returns the total amount processing, moved files, and the success status
+        `tuple[int, int, int, bool]`:
+        Returns the total amount processed, moved files, failed files, and the success status
     """
     # __file__ is the script's directory
     folder: Path = Path(path).expanduser().resolve()
 
-    # Check if the folder doesn't exist, wait
-    if not folder.exists():
-        logger.debug(msg="Folder doesn't exist, terminating...")
-        return 0, 0, False
+    # Check if the folder doesn't exist or isn't actually a directory (e.g. a file was given)
+    # `is_dir()` covers both cases in one check, since it's False for both
+    if not folder.is_dir():
+        logger.debug(msg="Folder doesn't exist or isn't a directory, terminating...")
+        return 0, 0, 0, False
 
-    # Initialize the total amount of processed files
-    # and actually moved ones
-    total: int = 0
+    # Get the (file, destination) pairs from the shared finder function
+    # This is the same logic `preview()` uses, so both stay in sync
+    pairs: list[tuple[Path, Path]] = find_files(path=folder)
+
+    # Total is just however many files were found and paired up
+    total: int = len(pairs)
+
+    # Initialize the amount of successfully moved files
+    # and the amount that failed to move
     moved: int = 0
+    failed: int = 0
 
-    files: list[Path] = []
-
-    # Doing a list comprehension is just taking a snapshot
-    # Doing it outside the list is a bit slower but
-    # if the user removed something inside their files
-    # and the hard drive is slow af
-    # This should not catch the deleted file unless
-    # it was caught after the file getting added to the `files` list
-    # These are all cover-ups so I can include logging
-    for item in folder.iterdir():
-        if item.is_file():
-            files.append(item)
-            logger.debug("Added %s to the list", item)
-
-    # Check if the folder category already exist in the
-    # parent directory of the directory given by user
-    for item in files:
-        if item.parent.name in EXTENSIONS.values():
-            continue
-
-        item_extension_lowercased: str = item.suffix.lower()
-        # Add 1 as 1 processed file
-        total += 1
-
-        # Get the extension type for each file extension
-        category: str = EXTENSIONS.get(
-            item_extension_lowercased, "Other"
-        )  # If the `EXTENSIONS` didn't contain it, give `Other` back
-        if not item_extension_lowercased in EXTENSIONS:
-            logger.debug("Unknown file extension for %s", item.suffix)
-
-        # Make a new `Path` item
-        ## Thank god I'm type hinting all of this
-        destination: Path = folder / category
-
-        if destination.exists():
-            logger.debug("Destination already exists: %s", destination)
-
+    # Go through each (file, destination) pair and actually perform the move
+    for item, destination in pairs:
         # Make the destination (a.k.a, the file category of the file extension)
         # If it exists, don't give a fuck about creating a folder and continue
         destination.mkdir(exist_ok=True)
@@ -105,11 +109,14 @@ def organizer(
             counter += 1
 
         # Actually move the file
+        # Catch any OS-level failure (permission denied, file locked, etc.)
+        # so one bad file doesn't crash the whole batch
         try:
             move(src=item, dst=item_location)  # shutil.move(item, item_location)
-        except FileNotFoundError as e:
+        except OSError as e:
             logger.error("An unexpected error happened: %s", e)
-            return total, moved, False
+            failed += 1
+            continue
         logger.info("Moved %s -> %s", item, item_location)
 
         # Now it's one moved file and processed after one iteration
@@ -120,11 +127,14 @@ def organizer(
     if total == 0:
         logger.debug("No file has been moved.")
 
+    # Success only if nothing failed along the way
+    success: bool = failed == 0
+
     # Return and deconstruct in the main program
-    return total, moved, True
+    return total, moved, failed, success
 
 
-def preview(input_path: str) -> list[tuple[str, Path]]:
+def preview(input_path: str) -> tuple[list[tuple[str, Path]], bool]:
     """Take a Preview of the following changes
 
     Args:
@@ -134,12 +144,9 @@ def preview(input_path: str) -> list[tuple[str, Path]]:
         `list[tuple[str, Path]]`: a Preview of the whole operation
     """
     path: Path = Path(input_path).expanduser().resolve()
-    files: list[tuple[str, Path]] = []  # Initialize a list
 
-    for item in path.iterdir():  # Iterate over the directory
-        if item.is_file():  # Check if the current item is a file or a directory
-            category: str = EXTENSIONS.get(item.suffix.lower(), "Other")
-            files.append((item.name, item.parent / category))  # Append it
-
+    if not path.is_dir():
+        return [], False
+    pairs = find_files(path)
     # Return the list
-    return files
+    return [(item.name, dest) for item, dest in pairs], True
