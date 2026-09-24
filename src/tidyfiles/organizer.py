@@ -74,9 +74,7 @@ def find_files(path: Path, recurse: bool = False) -> list[tuple[Path, Path]]:
     return files
 
 
-def organizer(
-    path: str | Path,
-) -> OrganizeResult:
+def organizer(path: str | Path, recurse: bool = False) -> OrganizeResult:
     """Organizes the given folder based on the filename's suffix (extension)
 
     Args:
@@ -104,7 +102,7 @@ def organizer(
 
     # Get the (file, destination) pairs from the shared finder function
     # This is the same logic `preview()` uses, so both stay in sync
-    pairs: list[tuple[Path, Path]] = find_files(path=folder)
+    pairs: list[tuple[Path, Path]] = find_files(path=folder, recurse=recurse)
 
     # Total is just however many files were found and paired up
     total: int = len(pairs)

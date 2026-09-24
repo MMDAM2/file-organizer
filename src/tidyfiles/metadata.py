@@ -31,14 +31,28 @@ def create_metadata(folder: Path) -> None:
 def read_metadata(folder: Path) -> dict:
     """Read and return the folder's metadata."""
 
-    file: Path = folder / METADATA_FILE
+    file = folder / METADATA_FILE
 
     if not file.exists():
-        return {
-            "categories": [],
-        }
+        return {"categories": []}
 
-    return json.loads(file.read_text(encoding="utf-8"))
+    try:
+        metadata = json.loads(file.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {"categories": []}
+
+    if not isinstance(metadata, dict):
+        return {"categories": []}
+
+    categories = metadata.get("categories", [])
+
+    if not isinstance(categories, list):
+        return {"categories": []}
+
+    if not all(isinstance(category, str) for category in categories):
+        return {"categories": []}
+
+    return metadata
 
 
 def get_categories(folder: Path) -> list[str]:

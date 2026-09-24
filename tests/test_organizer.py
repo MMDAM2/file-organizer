@@ -488,3 +488,94 @@ def test_metadata_file_is_not_organized(tmp_path):
     assert result.failed == 0
     assert result.success is True
     assert (tmp_path / METADATA_FILE).is_file()
+
+
+def test_recursive_organizer_skips_metadata_categories(tmp_path):
+    images = tmp_path / "Images"
+    images.mkdir()
+
+    create_metadata(tmp_path)
+    add_category(tmp_path, "Images")
+
+    existing = images / "photo.jpg"
+    existing.write_text("test")
+
+    result = organizer(tmp_path)
+
+    assert result.total == 0
+    assert result.moved == 0
+    assert result.failed == 0
+    assert result.success is True
+    assert existing.is_file()
+
+
+def test_organizer_can_recurse(tmp_path):
+    nested = tmp_path / "nested"
+    nested.mkdir()
+
+    file = nested / "photo.jpg"
+    file.write_text("test")
+
+    result = organizer(tmp_path, recurse=True)
+
+    assert result.total == 1
+    assert result.moved == 1
+    assert result.failed == 0
+    assert result.success is True
+    assert (tmp_path / "Images" / "photo.jpg").is_file()
+
+
+def test_recursive_organizer_skips_existing_category_files(tmp_path):
+    images = tmp_path / "Images"
+    images.mkdir()
+
+    nested = tmp_path / "nested"
+    nested.mkdir()
+
+    old_file = images / "old.jpg"
+    old_file.write_text("old")
+
+    new_file = nested / "new.jpg"
+    new_file.write_text("new")
+
+    create_metadata(tmp_path)
+    add_category(tmp_path, "Images")
+
+    result = organizer(tmp_path, recurse=True)
+
+    assert result.total == 1
+    assert result.moved == 1
+    assert result.failed == 0
+    assert result.success is True
+
+    assert old_file.is_file()
+    assert (images / "new.jpg").is_file()
+    assert not new_file.exists()
+
+
+def test_read_metadata_with_invalid_json(tmp_path):
+    metadata_file = tmp_path / METADATA_FILE
+    metadata_file.write_text("{ invalid json")
+
+    assert read_metadata(tmp_path) == {"categories": []}
+
+
+def test_read_metadata_with_invalid_structure(tmp_path):
+    metadata_file = tmp_path / METADATA_FILE
+    metadata_file.write_text("[]")
+
+    assert read_metadata(tmp_path) == {"categories": []}
+
+
+def test_read_metadata_with_invalid_categories(tmp_path):
+    metadata_file = tmp_path / METADATA_FILE
+    metadata_file.write_text('{"categories": "Images"}')
+
+    assert read_metadata(tmp_path) == {"categories": []}
+
+
+def test_read_metadata_with_invalid_category_values(tmp_path):
+    metadata_file = tmp_path / METADATA_FILE
+    metadata_file.write_text('{"categories": ["Images", 123, true]}')
+
+    assert read_metadata(tmp_path) == {"categories": []}
