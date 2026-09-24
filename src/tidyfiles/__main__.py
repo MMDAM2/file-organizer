@@ -213,6 +213,7 @@ credit.pack_configure(pady=10)
 
 
 def main() -> None:
+    """Start the `tidyfiles` GUI."""
     window.mainloop()
 
 

@@ -1,3 +1,5 @@
+"""Manage metadata for `TidyFiles`-organized directories."""
+
 import json
 from pathlib import Path
 from typing import Final
@@ -9,6 +11,8 @@ CREATED_BY: Final[str] = "tidyfiles"
 
 
 def create_metadata(folder: Path) -> None:
+    """Create the metadata file if it does not already exist."""
+
     metadata: dict[str, str | float | list[str]] = {
         "created_by": CREATED_BY,
         "version": 1.1,
@@ -25,6 +29,8 @@ def create_metadata(folder: Path) -> None:
 
 
 def read_metadata(folder: Path) -> dict:
+    """Read and return the folder's metadata."""
+
     file: Path = folder / METADATA_FILE
 
     if not file.exists():
@@ -38,14 +44,8 @@ def read_metadata(folder: Path) -> dict:
 def get_categories(folder: Path) -> list[str]:
     """Get folders created by the organizer."""
 
-    marker = folder / METADATA_FILE
-
-    if not marker.exists():
-        return []
-
-    data = json.loads(marker.read_text(encoding="utf-8"))
-
-    return data.get("categories", [])
+    metadata = read_metadata(folder)
+    return metadata.get("categories", [])
 
 
 def add_category(folder: Path, category: str) -> None:

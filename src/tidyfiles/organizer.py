@@ -6,11 +6,13 @@ from pathlib import Path  # `os.path` is stupid, let's use pathlib instead
 from shutil import move  # For moving the files
 
 from .categories import EXTENSIONS
-from .metadata import add_category, create_metadata  # , read_metadata
+from .metadata import METADATA_FILE, add_category, create_metadata, get_categories
 
 
 @dataclass
 class OrganizeResult:
+    """Results from an organization operation."""
+
     total: int
     moved: int
     failed: int
@@ -41,14 +43,13 @@ def find_files(path: Path, recurse: bool = False) -> list[tuple[Path, Path]]:
     Returns:
         list[tuple[Path, Path]]: (file, destination_folder) pairs
     """
-    files: list[tuple[Path, Path]] = []  # Initialize a empty list
 
-    # metadata = read_metadata(path)
-    # categories = metadata["categories"]
+    files: list[tuple[Path, Path]] = []  # Initialize a empty list
+    categories = get_categories(path)
 
     # cSpell: words itermethod
 
-    itermethod = path.iterdir() if recurse else path.rglob("*")
+    itermethod = path.rglob("*") if recurse else path.iterdir()
 
     # Iterate over each item in the given directory
     for item in itermethod:
@@ -56,9 +57,11 @@ def find_files(path: Path, recurse: bool = False) -> list[tuple[Path, Path]]:
         if not item.is_file():
             continue
 
-        # If the same category exists in parent directory
-        # skip it
-        if item.parent.name in EXTENSIONS.values():
+        # If the item is not a file, skip it
+        if item.name == METADATA_FILE:
+            continue
+
+        if item.parent.name in categories:
             continue
 
         # Get the category name for the current item
@@ -115,7 +118,9 @@ def organizer(
     for item, destination in pairs:
         # Make the destination (a.k.a, the file category of the file extension)
         # If it exists, don't give a fuck about creating a folder and continue
-        destination.mkdir(exist_ok=True)
+        if not destination.exists():
+            destination.mkdir()
+            add_category(folder, destination.name)
 
         # Change the item location
         item_location: Path = destination / item.name
