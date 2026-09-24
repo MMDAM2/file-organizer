@@ -23,14 +23,14 @@ jobs:
       - run: uv sync --locked --all-extras --dev
 
       - name: Run Pylint
-        run: uv run pylint src/file_organizer --fail-under=8.5
+        run: uv run pylint src/tidyfiles --fail-under=8.5
 
   test:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        # Supported OS and Python version
+        # Supported OS and Python versions
         os:
           - ubuntu-latest
           - windows-latest
@@ -42,13 +42,11 @@ jobs:
           - "3.14"
 
     steps:
-      # Use the newest GitHub checkout
       - uses: actions/checkout@v7
 
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
         with:
           python-version: ${{ matrix.python-version }}
-          # Cache the installed uv for faster CI results
           enable-cache: true
 
       - run: uv sync --locked --all-extras --dev

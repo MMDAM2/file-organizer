@@ -5,7 +5,7 @@ requires = ["uv_build>=0.12.2,<0.13.0"]
 build-backend = "uv_build"
 
 [project]
-name = "file-organizer"
+name = "tidyfiles"
 version = "1.1.0"
 description = "A file organizer that, well, organizes a folder"
 readme = "README.md"
@@ -16,8 +16,8 @@ authors = [
 ]
 dependencies = []
 
-[project.scripts]
-projects = "projects:file_organizer"
+[project.gui-scripts]
+tidyfiles = "tidyfiles.__main__:main"
 
 [tool.ruff]
 line-length = 100

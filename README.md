@@ -1,76 +1,93 @@
-# File Organizer
+# `tidyfiles`
 
-> A Python script that automatically organizes files based on their file extensions.
+> A Python program that automatically organizes files based on their file extensions.
 
 ## Features
 
-- Organizes files based on their extensions
-- Automatically handles duplicate filenames
-- Features an entry level GUI
+* Organizes files based on their extensions
+* Automatically handles duplicate filenames
+* Features an entry-level GUI
 
 > [!WARNING]
-> This program should not be used as a main solution to organize files
+> This program should not be used as a primary solution for organizing files.
 >
-> Use a well known and better maintained file organizer
+> Consider using a well-known and actively maintained file organizer instead.
 
 ## Installation
 
 ### Requirements
 
-- Python v3.10+
+* Python 3.10+
 
 > [!NOTE]
-> It mostly uses standard library so no worry for the dependencies
+> `tidyfiles` mostly uses the Python standard library, so there are very few external dependencies.
 
 ### Steps
 
-- Clone the repository:
+* Clone the repository:
 
 ```bash
-git clone https://github.com/MMDAM2/file_organizer.git
-cd file_organizer
+git clone https://github.com/MMDAM2/tidyfiles.git
+cd tidyfiles
 ```
 
-- Make the file executable:
-
-> [!NOTE]
-> You can skip this part in Windows
+* Install the project:
 
 ```bash
-chmod +x src/file_organizer/main.py
+python -m pip install .
 ```
 
-- Run the file using:
-
-> [!NOTE]
-> You can also skip this in Windows :point_down:
+* Run the program:
 
 ```bash
-src/hidden/main.py
+tidyfiles
 ```
 
-or
+## Running from source
+
+You can run TidyFiles directly from the repository without installing it.
+
+### Linux / macOS
 
 ```bash
-python3 src/file_organizer/main.py
+PYTHONPATH=src python3 -m tidyfiles
+```
+
+### Windows Command Prompt
+
+```cmd
+set PYTHONPATH=src
+python -m tidyfiles
+```
+
+### Windows PowerShell
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m tidyfiles
 ```
 
 ## File Structure
 
-<!-- cSpell: words pyproject -->
+<!-- cSpell: words pyproject tidyfiles -->
 
-```none
+```text
 -> .github
   -> workflows
     -> github-yml.yml
+
 -> src
-  -> file_organizer
+  -> tidyfiles
     -> README.md
-    -> main.py
+    -> __init__.py
+    -> __main__.py
     -> organizer.py
     -> categories.py
+    -> metadata.py
+
 -> tests
   -> test_organizer.py
+
 -> .gitignore
 -> .prettierrc
 -> .python-version
@@ -79,12 +96,8 @@ python3 src/file_organizer/main.py
 -> pyproject.toml
 ```
 
-<!-- GitHub Markdown Link: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax  -->
-<!-- cSpell: disable-next-line  -->
-<!-- mikhay in zaban ro yad begiri az link bala estefade kon -->
-
 ## Notes
 
-- File are moved, not copied nor deleted
-- Do not use this as a main organizing app
-- Existing files with same names will be renamed to prevent overwriting
+* Files are moved, not copied or deleted.
+* Do not use `tidyfiles` as your primary file-organizing application.
+* Existing files with the same names are renamed to prevent overwriting.

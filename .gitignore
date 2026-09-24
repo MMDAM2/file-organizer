@@ -18,6 +18,5 @@ prog.txt
 *.log
 
 # Editor files
-*.code-workspace
 .vscode
 .idea
