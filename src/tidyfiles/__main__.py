@@ -5,11 +5,12 @@
 """Main app"""
 
 # import logging  # Logging the app
-import os
+# import os
+import logging
 import tkinter as tk  # The basic GUI framework
 from pathlib import Path
-from subprocess import run as command
 
+# from subprocess import run as command
 # from pathlib import Path  # No `os.path` allowed
 from tkinter import (
     filedialog,
@@ -17,28 +18,30 @@ from tkinter import (
     ttk,
 )
 
+from platformdirs import user_log_dir
+
 from .organizer import organizer, preview
 
-if os.name != "posix":
-    command(args=["cls"], shell=True, check=True)
-else:
-    if os.environ.get(key="TERM", default=None) is not None:
-        # subprocess.run(["cls"] if os.name == "nt" else ["clear"], shell=True, check=True)
-        command(args=["clear"], shell=True, check=True)
+# if os.name != "posix":
+#     command(args=["cls"], shell=True, check=True)
+# else:
+#     if os.environ.get(key="TERM", default=None) is not None:
+#         # subprocess.run(["cls"] if os.name == "nt" else ["clear"], shell=True, check=True)
+#         command(args=["clear"], shell=True, check=True)
 
 # Make a 'log' folder
-# log_path: Path = Path(__file__).parent / "log"  # In this case, __file__ is the script's path
-# log_path.mkdir(exist_ok=True) # Don't create the directory again if it exists
-#
-# # Log file's configuration
-# logging.basicConfig(
-#     filename=log_path / "main.log",
-#     level=logging.DEBUG, # Severity is DEBUG
-#     format="%(levelname)s: %(message)s", # This is enough for information
-# )
+log_path: Path = Path(user_log_dir("TidyFiles"))  # In this case, __file__ is the script's path
+log_path.mkdir(parents=True, exist_ok=True)  # Don't create the directory again if it exists
+
+# Log file's configuration
+logging.basicConfig(
+    filename=log_path / "main.log",
+    level=logging.DEBUG,  # Severity is DEBUG
+    format="%(levelname)s: %(message)s",  # This is enough for information
+)
 #
 # # Get a logger with the app's name
-# logger: logging.Logger = logging.getLogger(name=__name__)
+logger: logging.Logger = logging.getLogger(name=__name__)
 # Not logging for now
 
 
@@ -106,14 +109,27 @@ def show_preview(op_preview: list[tuple[str, Path]]) -> None:
 
 
 def organize_files(path: str) -> None:
-    """The handler for button click
+    """Handle an organization operation."""
 
-    Args:
-        path (str): The user's given path
-    """
-    # Not so sure if the given path is valid, so we just catch the error
-    result = organizer(path)
-    # Check if organizing the files actually worked
+    try:
+        result = organizer(path)
+
+    except OSError as error:
+        logger.exception("Filesystem error while organizing %s", path)
+        messagebox.showerror(
+            title="Filesystem error",
+            message=f"Could not access or modify the selected directory.\n\n{error}",
+        )
+        return
+
+    except Exception:
+        logger.exception("Unexpected error while organizing %s", path)
+        messagebox.showerror(
+            title="Unexpected error",
+            message="Something went wrong. Check the application logs.",
+        )
+        return
+
     if result.success:
         messagebox.showinfo(
             title="Completed",
@@ -145,10 +161,25 @@ def dry_run_check(check: bool) -> None:
     if not check:  # Check if dry run is enabled
         organize_files(path=txt1.get())
     else:
-        op_preview, success = preview(input_path=txt1.get())
-        if not success:
+        try:
+            op_preview, success = preview(input_path=txt1.get())
+            if not success:
+                messagebox.showerror(
+                    title="Invalid path", message="The given path does not exist or is invalid"
+                )
+                return
+        except OSError:
+            logger.exception("Filesystem error while creating preview")
             messagebox.showerror(
-                title="Invalid path", message="The given path does not exist or is invalid"
+                title="Filesystem error",
+                message="Could not access the selected directory.",
+            )
+            return
+        except Exception:
+            logger.exception("Unexpected error while creating preview")
+            messagebox.showerror(
+                title="Unexpected error",
+                message="Something went wrong while creating the preview.",
             )
             return
         show_preview(op_preview=op_preview)

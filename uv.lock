@@ -181,6 +181,7 @@ source = { editable = "." }
 
 [package.dev-dependencies]
 dev = [
+    { name = "platformdirs" },
     { name = "pylint" },
     { name = "pytest" },
     { name = "ruff" },
@@ -190,6 +191,7 @@ dev = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "platformdirs", specifier = ">=4.0" },
     { name = "pylint", specifier = "==4.0.7" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "ruff", specifier = "==0.16.4" },
