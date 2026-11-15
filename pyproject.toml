@@ -1,5 +1,5 @@
 #:schema https://json.schemastore.org/pyproject.json
-# cSpell: words pylint MMDAM havinaccount
+# cSpell: disable
 [build-system]
 requires = ["uv_build>=0.12.2,<0.13.0"]
 build-backend = "uv_build"
@@ -9,12 +9,12 @@ name = "tidyfiles"
 version = "1.1.0"
 description = "A file organizer that, well, organizes a folder"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [
   { name = "MMDAM2", email = "218409334+MMDAM2@users.noreply.github.com" },
   { name = "havinaccount", email = "203082879+havinaccount@users.noreply.github.com" },
 ]
-dependencies = []
+dependencies = ["platformdirs>=4.0"]
 
 [project.gui-scripts]
 tidyfiles = "tidyfiles.__main__:main"
@@ -26,4 +26,4 @@ line-length = 100
 disable = ["fixme", "unused-argument"]
 
 [dependency-groups]
-dev = ["pylint==4.0.7", "pytest>=9.1.1", "ruff==0.16.4", "platformdirs>=4.0"]
+dev = ["pylint==4.0.7", "pytest>=9.1.1", "ruff==0.16.4"]

@@ -143,8 +143,8 @@ def organizer(path: str | Path, recurse: bool = False) -> OrganizeResult:
             # Catch any OS-level failure (permission denied, file locked, etc.)
             # so one bad file doesn't crash the whole batch
             shutil.move(src=item, dst=item_location)  # shutil.move(item, item_location)
-        except OSError as e:
-            logger.exception("An unexpected error happened: %s", e)
+        except OSError:
+            logger.exception("An unexpected error happened: %s", path)
             failed += 1
             continue
         logger.info("Moved %s -> %s", item, item_location)

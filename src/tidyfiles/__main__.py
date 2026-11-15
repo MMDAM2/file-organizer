@@ -122,14 +122,6 @@ def organize_files(path: str) -> None:
         )
         return
 
-    except Exception:
-        logger.exception("Unexpected error while organizing %s", path)
-        messagebox.showerror(
-            title="Unexpected error",
-            message="Something went wrong. Check the application logs.",
-        )
-        return
-
     if result.success:
         messagebox.showinfo(
             title="Completed",
@@ -175,13 +167,7 @@ def dry_run_check(check: bool) -> None:
                 message="Could not access the selected directory.",
             )
             return
-        except Exception:
-            logger.exception("Unexpected error while creating preview")
-            messagebox.showerror(
-                title="Unexpected error",
-                message="Something went wrong while creating the preview.",
-            )
-            return
+
         show_preview(op_preview=op_preview)
 
 
